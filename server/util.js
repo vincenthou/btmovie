@@ -71,7 +71,7 @@ function formatDetailPage(url, cb) {
     $detail.find('img').each(function(){
       images.push($(this).attr('src'));
     });
-    data.logo = images[0];
+    data.poster = images[0];
     data.screencast = images[1];
     data.paths = [];
     $detail.find('table a').each(function(){
