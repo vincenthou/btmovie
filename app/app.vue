@@ -1,20 +1,19 @@
 <template lang="jade">
-div
-  img(class="logo", src="./images/logo.png")
+div.ui.container
   h1 {{msg}}
-  list
+  movies
 </template>
 
 <script>
-import List from './components/list.vue'
+import Movies from './components/movies.vue'
 export default {
   data () {
     return {
-      msg: 'Hello from vue-loader!'
+
     }
   },
   components: {
-    List
+    Movies
   }
 }
 </script>
@@ -22,10 +21,8 @@ export default {
 <style lang="stylus">
 font-stack = Helvetica, sans-serif
 primary-color = #999
+
 body
   font 100% font-stack
   color primary-color
-.logo
-  width 40px
-  height 40px
 </style>
