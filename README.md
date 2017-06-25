@@ -1,19 +1,30 @@
-# Introduction
+# 介绍
 
-This is a simple project to practice some technologies I intrested in and solve a basic requirement for finding downloadable movies.
+该项目用于练手一些感兴趣的技术并且实现最新电影种子资源收集网站
 
-# Tech Stack
+# 技术栈
 
-## Frontend
+## 前端
 
-* [vuejs](http://vuejs.org/): a clean MVVM framework
-* [sematic-ui](http://semantic-ui.com/): use gulp as build tool
-* [webpack](https://webpack.github.io/) hottest build tool currently
-* Language: [Jade](http://jade-lang.com/), [ES6](https://github.com/bevacqua/es6) and [stylus](http://stylus-lang.com/)
+### 语言
 
-## Backend
+* [Jade](http://jade-lang.com/)
+* [ES6](https://github.com/bevacqua/es6)
+* [stylus](http://stylus-lang.com/)
 
-* [nodejs](http://nodejs.org/): Awesome environment for finishing backend tasks and buiding tools
-* [restify](http://restify.com/): Restful API framework
-* [cheerio](http://cheeriojs.github.io/cheerio/): Parser for snatched data using jQuery compatible API
-* [request](https://github.com/request/request): Simple request client
+### 框架和库
+
+* [Vuejs](http://vuejs.org/): 渐进式UI库
+* [Element](https://github.com/ElemeFE/element)
+
+## 后端
+
+### 语言
+
+* [nodejs](http://nodejs.org/)
+
+### 框架和库
+
+* [hapi](https://hapijs.com/): API框架
+* [cheerio](https://cheerio.js.org/): 爬虫解析
+* [request](https://github.com/request/request): 爬虫请求
