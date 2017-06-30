@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <el-menu :default-active="activeIndex" mode="horizontal" @select="navigate">
-      <el-menu-item index="1">
-        <router-link to="/">最新</router-link>
-      </el-menu-item>
-      <el-menu-item index="2">
-        <router-link to="search">搜索</router-link>
-      </el-menu-item>
-    </el-menu>
-    <router-view></router-view>
-  </div>
+  <mu-paper>
+    <mu-bottom-nav :value="bottomNav" @change="handleChange">
+      <mu-bottom-nav-item value="search" title="搜索" icon="search"/>
+      <mu-bottom-nav-item value="home" title="最新" icon="restore"/>
+      <mu-bottom-nav-item value="hot" title="最热" icon="favorite"/>
+    </mu-bottom-nav>
+    <transition>
+      <router-view></router-view>
+    </transition>
+  </mu-paper>
+
 </template>
 
 <style>
@@ -22,17 +22,17 @@ export default {
   name: 'app',
   data () {
     return {
-      activeIndex: '1'
+      bottomNav: 'home'
     }
   },
   methods: {
-    navigate () {
-      console.log(arguments)
+    handleChange (val) {
+      this.bottomNav = val
+      if (val === 'home') {
+        val = '/'
+      }
+      this.$router.push(val)
     }
   }
 }
 </script>
-
-<style>
-
-</style>
