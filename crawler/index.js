@@ -6,6 +6,9 @@ crawler.parseLatest()
   .then(list => {
     let filePath = config.distFolder + '/latest.json'
     let json = JSON.stringify(list, null, 2)
+    if (!fs.existsSync(config.distFolder)) {
+      fs.mkdirSync(config.distFolder)
+    }
     if (!fs.existsSync(filePath)) {
       fs.close(fs.openSync(filePath, 'w+'))
     }

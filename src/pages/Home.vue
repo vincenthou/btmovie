@@ -8,10 +8,12 @@
       {{ error }}
     </div>
 
-    <div v-if="post" class="content">
-      <h2>{{ post.title }}</h2>
-      <p>{{ post.body }}</p>
-    </div>
+    <ul v-if="movies.length" class="content">
+      <li v-for="movie in movies">
+        <h2>{{ movie.title }}</h2>
+        <p>{{ movie.tag }}</p>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -22,7 +24,7 @@ export default {
   data () {
     return {
       loading: false,
-      post: null,
+      movies: [],
       error: null
     }
   },
@@ -34,11 +36,12 @@ export default {
   },
   methods: {
     fetchData () {
-      this.error = this.post = null
+      this.error = this.movies = null
       this.loading = true
-      axios.get('/latest.json')
+      axios.get('/static/latest.json')
         .then(resp => {
-          console.log(resp)
+          this.loading = false
+          this.movies = resp.data
         })
         .catch(error => {
           console.log(error)
