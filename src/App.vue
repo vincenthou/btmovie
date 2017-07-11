@@ -1,5 +1,5 @@
 <template>
-  <mu-paper>
+  <div class="container">
     <mu-bottom-nav :value="bottomNav" @change="handleChange">
       <mu-bottom-nav-item value="search" title="搜索" icon="search"/>
       <mu-bottom-nav-item value="home" title="最新" icon="restore"/>
@@ -8,12 +8,14 @@
     <transition>
       <router-view></router-view>
     </transition>
-  </mu-paper>
-
+    <mu-back-top/>
+  </div>
 </template>
 
 <style>
-
+  .container {
+    overflow: hidden;
+  }
 </style>
 
 

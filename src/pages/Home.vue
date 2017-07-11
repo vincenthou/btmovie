@@ -1,21 +1,28 @@
 <template>
   <div class="post">
+    <mu-toast v-if="error" message="没有找到好电影"/>
     <div class="loading" v-if="loading">
-      Loading...
+      <mu-circular-progress :size="40"/>
     </div>
-
-    <div v-if="error" class="error">
-      {{ error }}
+    <div class="movies-wrapper">
+      <mu-grid-list cell-height="570">
+        <mu-grid-tile v-for="movie, index in movies" :key="index">
+          <img :src="movie.poster">
+          <span slot="title">{{movie.title}}</span>
+          <span slot="subTitle">{{movie.year}} - {{movie.tag}} - {{movie.type}}</span>
+        </mu-grid-tile>
+      </mu-grid-list>
     </div>
-
-    <ul v-if="movies.length" class="content">
-      <li v-for="movie in movies">
-        <h2>{{ movie.title }}</h2>
-        <p>{{ movie.tag }}</p>
-      </li>
-    </ul>
   </div>
 </template>
+
+<!-- Add "scoped" attribute to limit CSS to this page only -->
+<style scoped>
+  .movies-wrapper {
+    margin: 10px auto;
+    width: 800px;
+  }
+</style>
 
 <script>
 import axios from 'axios'
@@ -44,14 +51,13 @@ export default {
           this.movies = resp.data
         })
         .catch(error => {
-          console.log(error)
+          if (error) {
+            this.error = true
+            if (this.error) clearTimeout(this.toastTimer)
+            this.toastTimer = setTimeout(() => { this.error = false }, 2000)
+          }
         })
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this page only -->
-<style scoped>
-
-</style>
