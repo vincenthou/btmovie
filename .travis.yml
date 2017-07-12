@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+- '7.7.4'
+env:
+  global:
+  - PATH: node_modules/.bin/:$PATH
+  - REPO_SLUG: vincenthou/btmovie
+install:
+- npm install
+script:
+- npm run build
+after_success:
+- sh .deploy.sh
+cache:
+  directories:
+  - node_modules
+branches:
+  only:
+  - master
