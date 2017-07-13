@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [ -d docs ]; then
+if [ -d dist ]; then
     echo "➥ Commit files"
     git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/${REPO_SLUG}.git ${REPO_SLUG} > /dev/null
-    cp -fr docs/* ${REPO_SLUG}
+    cp -fr dist/* ${REPO_SLUG}
     cd ${REPO_SLUG}
     ls -la
     git config user.email "travis@travis-ci.org"

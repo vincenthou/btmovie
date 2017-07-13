@@ -56,7 +56,7 @@ export default {
     fetchData () {
       this.error = this.movieRows = null
       this.loading = true
-      axios.get('/static/latest.json')
+      axios.get('/btmovie/static/latest.json')
         .then(resp => {
           this.loading = false
           console.log(resp.data)
