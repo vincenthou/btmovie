@@ -1,14 +1,13 @@
 <template>
   <div class="container">
-    <mu-bottom-nav :value="bottomNav" @change="handleChange">
-      <mu-bottom-nav-item value="search" title="搜索" icon="search"/>
-      <mu-bottom-nav-item value="home" title="最新" icon="restore"/>
-      <mu-bottom-nav-item value="hot" title="最热" icon="favorite"/>
-    </mu-bottom-nav>
+    <mu-tabs :value="activeTab" @change="handleTabChange">
+      <mu-tab value="search" icon="search" title="搜索"/>
+      <mu-tab value="home" icon="restore" title="电影"/>
+      <mu-tab value="hot" icon="favorite" title="电视剧"/>
+    </mu-tabs>
     <transition>
       <router-view></router-view>
     </transition>
-    <mu-back-top/>
   </div>
 </template>
 
@@ -24,16 +23,17 @@ export default {
   name: 'app',
   data () {
     return {
-      bottomNav: 'home'
+      activeTab: 'home'
     }
   },
   methods: {
-    handleChange (val) {
-      this.bottomNav = val
-      if (val === 'home') {
-        val = '/'
+    handleTabChange (activeTab) {
+      let pathName = activeTab
+      this.activeTab = activeTab
+      if (activeTab === 'home') {
+        pathName = '/'
       }
-      this.$router.push(val)
+      this.$router.push(pathName)
     }
   }
 }

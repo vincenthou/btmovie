@@ -1,7 +1,9 @@
 <template>
   <div class="post">
-    <mu-toast v-if="error" message="没有找到好电影"/>
-    <div class="loading" v-if="loading">
+    <mu-toast v-if="hasDataLoadErr" message="没有找到好电影"/>
+    <mu-toast v-if="hasCopyErr" message="复制地址失败"/>
+    <mu-toast v-if="hasCopySuccess" message="复制地址成功"/>
+    <div class="loading" v-if="isLoaded">
       <mu-circular-progress :size="40"/>
     </div>
     <div class="movies-wrapper">
@@ -14,8 +16,12 @@
             <mu-card-actions>
               <mu-chip>{{movie.year}}</mu-chip>
               <mu-chip>{{movie.tag}}</mu-chip>
-              <mu-text-field disabled="true" v-model="path" fullWidth v-for="path, pathIndex in movie.paths" :key="pathIndex"/>
-              <mu-raised-button label="原始详情页面" target="__blank" :href="movie.link" primary/>
+              <mu-divider class="action-divider"/>
+              <mu-raised-button label="原始详情页面" target="__blank" a:href="movie.link" primary/>
+              <mu-raised-button label="复制下载地址" primary 
+                v-clipboard:copy="movie.paths"
+                v-clipboard:success="onCopySuccess"
+                v-clipboard:error="onCopyError"/>
             </mu-card-actions>
           </mu-card>
         </mu-col>
@@ -32,6 +38,9 @@
   .movie-row {
     padding-bottom: 10px; 
   }
+  .action-divider {
+    margin: 10px 0;
+  }
 </style>
 
 <script>
@@ -41,9 +50,11 @@ const MOVIE_COL = 4
 export default {
   data () {
     return {
-      loading: false,
-      movies: [],
-      error: null
+      isLoaded: false,
+      movieRows: [],
+      hasDataLoadErr: false,
+      hasCopySuccess: false,
+      hasCopyErr: false
     }
   },
   created () {
@@ -54,12 +65,9 @@ export default {
   },
   methods: {
     fetchData () {
-      this.error = this.movieRows = null
-      this.loading = true
-      axios.get('/btmovie/static/latest.json')
+      axios.get('/btmovie/static/movies.json')
         .then(resp => {
           this.loading = false
-          console.log(resp.data)
           let rows = resp.data.reduce((rows, item, index, items) => {
             let rowIndex = ~~(index / MOVIE_COL)
             if (index % MOVIE_COL) {
@@ -73,11 +81,20 @@ export default {
         })
         .catch(error => {
           if (error) {
-            this.error = true
-            if (this.error) clearTimeout(this.toastTimer)
-            this.toastTimer = setTimeout(() => { this.error = false }, 2000)
+            this.showToast('hasDataLoadErr')
           }
         })
+    },
+    onCopySuccess () {
+      this.showToast('hasCopySuccess')
+    },
+    onCopyErr () {
+      this.showToast('hasCopySuccess')
+    },
+    showToast (field) {
+      this[field] = true
+      if (this.toastTimer) clearTimeout(this.toastTimer)
+      this.toastTimer = setTimeout(() => { this[field] = false }, 2000)
     }
   }
 }

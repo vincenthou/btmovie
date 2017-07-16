@@ -2,7 +2,7 @@
 
 if [ -d dist ]; then
     echo "➥ Commit files"
-    git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/${REPO_SLUG}.git ${REPO_SLUG} > /dev/null
+    git clone --quiet --branch=gh-pages https://github.com/${REPO_SLUG}.git ${REPO_SLUG} > /dev/null
     cp -fr dist/* ${REPO_SLUG}
     cd ${REPO_SLUG}
     ls -la
