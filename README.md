@@ -1,6 +1,6 @@
 # 介绍
 
-该项目用于练手一些感兴趣的技术并且实现最新电影种子资源收集网站
+该项目用于练手一些感兴趣的技术并且实现最新电影和电视剧种子资源地址收集网站
 
 # 演示
 
@@ -12,14 +12,14 @@
 
 ### 语言
 
-* [Jade](http://jade-lang.com/)
 * [ES6](https://github.com/bevacqua/es6)
 * [stylus](http://stylus-lang.com/)
 
 ### 框架和库
 
 * [Vuejs](http://vuejs.org/): 渐进式UI库
-* [Element](https://github.com/ElemeFE/element)
+* [Vue-router](https://router.vuejs.org): 基于 Vue 2.0 的前端路由
+* [Muse-UI](http://www.muse-ui.org/): 基于 Vue 2.0 和 Material Design 的 UI 组件库
 
 ## 后端
 
