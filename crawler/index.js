@@ -2,7 +2,7 @@ const config = require('./config');
 const crawler = require('./crawler');
 const fs = require('fs');
 
-crawler.parseLatest()
+crawler.parseMovies()
   .then(list => {
     let filePath = config.distFolder + '/movies.json'
     let json = JSON.stringify(list, null, 2)

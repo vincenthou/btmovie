@@ -21,7 +21,7 @@ const parseFields = ($) => {
     field && fields.push(field);
     //1, 4, 7... index is link;
     let link = $tableData.find('a').attr('href');
-    link && fields.push(config.targetDomain + link);
+    link && fields.push('http://www.ygdy8.com' + link);
   });
   return fields;
 }
@@ -93,39 +93,99 @@ function formatDetailPage(url) {
   });
 }
 
-const parseLatest = () => {
+function parseDYTTMovies($) {
   return new Promise(function(resolve, reject){
-    util.getSelector(config.targetDomain)
-      .then(function($){
-        let list = []
-        let promises = []
-        $('.co_content8').eq(0).find('a').each(function(idx){
-          if (idx % 2) {
-            let linkDOM = $(this)
-            let title = linkDOM.text()
-            let link = config.targetDomain + linkDOM.attr('href')
-            promises.push(new Promise(function(resolve, reject){
-              //Get logo and path from detailed page
-              formatDetailPage(link).then(function(data){
-                parseTitle(data, title)
-                data.link = link
-                resolve(data)
-              })
-            }))
-          }
-        })
+    let list = []
+    let promises = []
+    $('.co_content8').eq(0).find('a').each(function(idx){
+      if (idx % 2) {
+        let linkDOM = $(this)
+        let title = linkDOM.text()
+        let link = 'http://www.ygdy8.com' + linkDOM.attr('href')
+        promises.push(new Promise(function(resolve, reject){
+          //Get logo and path from detailed page
+          formatDetailPage(link).then(function(data){
+            parseTitle(data, title)
+            data.link = link
+            resolve(data)
+          })
+        }))
+      }
+    })
 
-        //Wait for all the promises
-        Promise.all(promises).then(list => {
-          resolve(list)
-        }, err => {
-          reject(err)
+    //Wait for all detail page fetching
+    Promise.all(promises).then(list => {
+      resolve(list)
+    }, err => {
+      reject(err)
+    })
+  })
+}
+
+function parseDetailPage(link){
+  return new Promise(function(resolve, reject){
+    util.getSelector(link).then(function($){
+      let $images = $('.img-responsive')
+      let yearRaw = $('.movie-h1').children('small').text().trim()
+      let data = {
+        poster: $images.eq(0).attr('src'),
+        screencast: $images.eq(1).attr('src'),
+        year: yearRaw.slice(1, 5),
+        paths: Array.from($('.dl-size').siblings('a').map(function(){
+          return $(this).attr('href')
+        })).reverse() // make the better at first
+      }
+      resolve(data)
+    })
+  })
+}
+
+function parse80sMovies($) {
+  return new Promise(function(resolve, reject) {
+    let list = []
+    let promises = []
+    $('.list_mov').each(function(){
+      let $this = $(this)
+      let $anchor = $this.children('a')
+      let link = $anchor.attr('href')
+      let score = $anchor.children('.poster-score').text()
+      let title = $this.children('.list_mov_title').find('a').text()
+      promises.push(new Promise(function(resolve, reject){
+        link = 'https://m.80s.tw' + link
+        parseDetailPage(link).then(function(data){
+          data.link = link
+          data.score = score
+          data.title = title
+          resolve(data)
         })
-      })
+      }))
+    })
+
+    //Wait for all detail page fetching
+    Promise.all(promises).then(list => {
+      resolve(list)
+    }, err => {
+      reject(err)
+    })
+  })
+}
+
+const parseMovies = () => {
+  return new Promise(function(resolve, reject){
+    Promise.all([
+      util.getSelector('http://www.ygdy8.com', 'gb2312').then(parseDYTTMovies),
+      util.getSelector('https://m.80s.tw/movie/1-0-0-0-0-0-0').then(parse80sMovies),
+    ]).then(lists => {
+      resolve(lists.reduce(function(newList, list){
+        return newList.concat(list)
+      }, []))
+    }, err => {
+      reject(err)
+    })
   })
 }
 
 module.exports = {
-  parseLatest,
+  parseMovies,
   parseSearch
 }
