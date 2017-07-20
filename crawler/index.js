@@ -3,11 +3,11 @@ const fs = require('fs')
 const Eightys = require('./crawlers/80s')
 const Dytt = require('./crawlers/dytt')
 
-const fetchLists = function(promises) {
-  return new Promise(function(resolve, reject){
+const fetchLists = function (promises) {
+  return new Promise(function (resolve, reject) {
     Promise.all(promises).then(lists => {
       // Merge lists
-      resolve(lists.reduce(function(newList, list){
+      resolve(lists.reduce(function (newList, list) {
         return newList.concat(list)
       }, []))
     }, err => {
@@ -16,21 +16,21 @@ const fetchLists = function(promises) {
   })
 }
 
-const fetchMovies = function() {
+const fetchMovies = function () {
   return fetchLists([
     new Eightys('https://m.80s.tw/movie/1-0-0-0-0-0-0').crawl(),
-    new Dytt().crawl(),
+    new Dytt().crawl()
   ])
 }
 
-const fetchTvPlays = function() {
+const fetchTvPlays = function () {
   return fetchLists([
-    new Eightys('https://m.80s.tw/movie/2-0-0-0-0-0-0').crawl(),
+    new Eightys('https://m.80s.tw/movie/2-0-0-0-0-0-0').crawl()
   ])
 }
 
-const writeFile = function(fileName) {
-  return function(data) {
+const writeFile = function (fileName) {
+  return function (data) {
     let filePath = config.distFolder + fileName
     let json = JSON.stringify(data, null, 2)
     if (!fs.existsSync(config.distFolder)) {

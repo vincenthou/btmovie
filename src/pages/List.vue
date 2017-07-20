@@ -20,7 +20,7 @@
               <mu-divider class="action-divider"/>
               <mu-raised-button label="原始详情页面" target="__blank" a:href="movie.link" primary/>
               <mu-raised-button label="复制下载地址" primary
-                v-clipboard:copy="movie.paths"
+                v-clipboard:copy="movie.paths.join('\n')"
                 v-clipboard:success="onCopySuccess"
                 v-clipboard:error="onCopyError"/>
             </mu-card-actions>
@@ -69,15 +69,17 @@ export default {
       axios.get(`/btmovie/static/${this.$route.name}.json`)
         .then(resp => {
           this.loading = false
-          let rows = resp.data.reduce((rows, item, index, items) => {
-            let rowIndex = ~~(index / MOVIE_COL)
-            if (index % MOVIE_COL) {
-              rows[rowIndex].push(item)
-            } else {
-              rows[rowIndex] = [item]
-            }
-            return rows
-          }, [])
+          // Sort with score
+          let rows = resp.data.sort((one, another) => another.score - one.score)
+            .reduce((rows, item, index, items) => {
+              let rowIndex = ~~(index / MOVIE_COL)
+              if (index % MOVIE_COL) {
+                rows[rowIndex].push(item)
+              } else {
+                rows[rowIndex] = [item]
+              }
+              return rows
+            }, [])
           this.movieRows = rows
         })
         .catch(error => {

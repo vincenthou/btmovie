@@ -5,13 +5,13 @@ const cheerio = require('cheerio')
 
 module.exports = class Crawler {
 
-  constructor(listURL, encoding = 'utf8') {
+  constructor (listURL, encoding = 'utf8') {
     this.listURL = listURL
     this.host = url.parse(listURL).host
     this.encoding = encoding
   }
 
-  crawlDetailPage(link, data) {
+  crawlDetailPage (link, data) {
     return new Promise((resolve, reject) => {
       this._getPageSelector(link).then($ => {
         Object.assign(data, this.parseDetail($))
@@ -22,7 +22,7 @@ module.exports = class Crawler {
     })
   }
 
-  async crawlListPage() {
+  crawlListPage () {
     return new Promise((resolve, reject) => {
       this._getPageSelector(this.listURL).then(($) => {
         let promises = []
@@ -47,14 +47,14 @@ module.exports = class Crawler {
     })
   }
 
-  crawl() {
+  crawl () {
     return this.crawlListPage()
   }
 
-  _getPageSelector(url) {
+  _getPageSelector (url) {
     return new Promise((resolve, reject) => {
       request.get({url: url, encoding: null}, (err, resp, body) => {
-        if (err == null && resp.statusCode == 200) {
+        if (err === null && resp.statusCode === 200) {
           !this.encoding && (this.encoding = 'utf8')
           let selector = cheerio.load(iconv.decode(body, this.encoding).toString())
           resolve(selector)
