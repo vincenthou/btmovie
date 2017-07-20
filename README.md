@@ -1,5 +1,7 @@
 # 介绍
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f0aece3b0e9c455084be3dfe43d712a4)](https://www.codacy.com/app/vincenthou/btmovie?utm_source=github.com&utm_medium=referral&utm_content=vincenthou/btmovie&utm_campaign=badger)
+
 该项目用于练手一些感兴趣的技术并且实现最新电影和电视剧种子资源地址收集网站
 
 # 演示
