@@ -16,9 +16,10 @@
             <mu-card-actions>
               <mu-chip>{{movie.year}}</mu-chip>
               <mu-chip>{{movie.tag}}</mu-chip>
+              <mu-chip backgroundColor="yellow300">{{movie.score}}</mu-chip>
               <mu-divider class="action-divider"/>
               <mu-raised-button label="原始详情页面" target="__blank" a:href="movie.link" primary/>
-              <mu-raised-button label="复制下载地址" primary 
+              <mu-raised-button label="复制下载地址" primary
                 v-clipboard:copy="movie.paths"
                 v-clipboard:success="onCopySuccess"
                 v-clipboard:error="onCopyError"/>
@@ -36,7 +37,7 @@
     margin: 20px 10px;
   }
   .movie-row {
-    padding-bottom: 10px; 
+    padding-bottom: 10px;
   }
   .action-divider {
     margin: 10px 0;
@@ -65,7 +66,7 @@ export default {
   },
   methods: {
     fetchData () {
-      axios.get('/btmovie/static/movies.json')
+      axios.get(`/btmovie/static/${this.$route.name}.json`)
         .then(resp => {
           this.loading = false
           let rows = resp.data.reduce((rows, item, index, items) => {
@@ -88,7 +89,7 @@ export default {
     onCopySuccess () {
       this.showToast('hasCopySuccess')
     },
-    onCopyErr () {
+    onCopyError () {
       this.showToast('hasCopySuccess')
     },
     showToast (field) {

@@ -1,9 +1,9 @@
 const Crawler = require('./crawler')
 
-export default class Eightys extends Crawler {
+module.exports = class Eightys extends Crawler {
 
-  constructor() {
-    super('https://m.80s.tw/movie/1-0-0-0-0-0-0',)
+  constructor(listURL) {
+    super(listURL)
   }
 
   selectDetailLinks($) {
@@ -12,7 +12,7 @@ export default class Eightys extends Crawler {
 
   parseList($linkNode) {
     let score = $linkNode.children('.poster-score').text()
-    let title = $linkNode.silblings('.list_mov_title').find('a').text()
+    let title = $linkNode.siblings('.list_mov_title').find('a').text()
     return {
       score,
       title,

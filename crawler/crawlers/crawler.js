@@ -1,6 +1,9 @@
 const url = require('url')
+const iconv = require('iconv-lite')
+const request = require('request')
+const cheerio = require('cheerio')
 
-export default class Crawler {
+module.exports = class Crawler {
 
   constructor(listURL, encoding = 'utf8') {
     this.listURL = listURL
@@ -10,39 +13,42 @@ export default class Crawler {
 
   crawlDetailPage(link, data) {
     return new Promise((resolve, reject) => {
-      this._getPageSelector(link).then(($) => {
-        Object.assign(data, parseDetail($))
+      this._getPageSelector(link).then($ => {
+        Object.assign(data, this.parseDetail($))
         resolve(data)
-      })
-    })
-  }
-
-  crawListPage() {
-    let promises = []
-    this._getPageSelector(this.listURL).then(($) => {
-      this.selectDetailLinks($).each((linkNode) => {
-        let $linkNode = $(linkNode)
-        let link = this.host + $linkNode.attr('href')
-        // Get information from list for detail
-        let data = this.parseList($linkNode)
-        data.link = link
-        // Get information from detailed page
-        promises.push(thils.crawlDetailPage(link, data))
-      })
-    })
-    return promises
-  }
-
-  crawl() {
-    return new Promise((resolve, reject) => {
-      let promises = this.crawlListPage()
-      // After all the detail page is parsed
-      Promise.all(promises).then(dataList => {
-        resolve(dataList)
-      }, err => {
+      }).catch(err => {
         reject(err)
       })
     })
+  }
+
+  async crawlListPage() {
+    return new Promise((resolve, reject) => {
+      this._getPageSelector(this.listURL).then(($) => {
+        let promises = []
+        this.selectDetailLinks($).each((idx, linkNode) => {
+          let $linkNode = $(linkNode)
+          let link = 'http://' + this.host + $linkNode.attr('href')
+          // Get information from list for detail
+          let data = this.parseList($linkNode)
+          if (data) {
+            data.link = link
+            // Get information from detailed page
+            promises.push(this.crawlDetailPage(link, data))
+          }
+        })
+        // After all the detail page is parsed
+        Promise.all(promises).then(dataList => {
+          resolve(dataList)
+        }, err => {
+          reject(err)
+        })
+      })
+    })
+  }
+
+  crawl() {
+    return this.crawlListPage()
   }
 
   _getPageSelector(url) {

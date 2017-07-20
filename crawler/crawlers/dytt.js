@@ -1,17 +1,17 @@
 const Crawler = require('./crawler')
 
-export default class Dytt extends Crawler {
+module.exports = class Dytt extends Crawler {
 
   constructor() {
     super('http://www.ygdy8.com', 'gb2312')
   }
 
-  selectDetailLinks() {
+  selectDetailLinks($) {
     return $('.co_content8').eq(0).find('a')
   }
 
-  parseList() {
-    let title = linkDOM.text()
+  parseList($linkNode) {
+    let title = $linkNode.text()
     return this._parseTitle(title)
   }
 
@@ -34,6 +34,9 @@ export default class Dytt extends Crawler {
 
   _parseTitle(title) {
     let matches = title.match(/(\d+年)(.+)《(.+)》(.+)/);
+    if (!matches) {
+      return null
+    }
     return {
       year: matches[1],
       tag: matches[2],
