@@ -1,4 +1,5 @@
 const Crawler = require('./crawler')
+const douban = require('../douban')
 
 module.exports = class Dytt extends Crawler {
 
@@ -8,6 +9,21 @@ module.exports = class Dytt extends Crawler {
 
   selectDetailLinks ($) {
     return $('.co_content8').eq(0).find('a')
+  }
+
+  extendData (data) {
+    return new Promise((resolve, reject) => {
+      data.score = 0
+      douban.search(data.title).then(result => {
+        result = JSON.parse(result)
+        if (result.total) {
+          data.score = result.subjects[0].rating.average
+        }
+        resolve(data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 
   parseList ($linkNode) {

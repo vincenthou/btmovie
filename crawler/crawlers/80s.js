@@ -7,7 +7,7 @@ module.exports = class Eightys extends Crawler {
   }
 
   parseList ($linkNode) {
-    let score = $linkNode.children('.poster-score').text()
+    let score = parseFloat($linkNode.children('.poster-score').text())
     let title = $linkNode.siblings('.list_mov_title').find('a').text()
     return {
       score,

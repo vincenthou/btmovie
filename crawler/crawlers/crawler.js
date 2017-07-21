@@ -15,7 +15,15 @@ module.exports = class Crawler {
     return new Promise((resolve, reject) => {
       this._getPageSelector(link).then($ => {
         Object.assign(data, this.parseDetail($))
-        resolve(data)
+        if (this.extendData) {
+          this.extendData(data).then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        } else {
+          resolve(data)
+        }
       }).catch(err => {
         reject(err)
       })
